@@ -4,6 +4,17 @@ using System.Text;
 
 namespace Tecgraf
 {
+
+
+    public enum IupError {
+        NoError = 0,
+        Error = 1,
+        Opened = -1,
+        Invalid = -1,
+        InvalidID = -10
+    }
+
+
     public enum MouseButton
     {
         Left=49,
@@ -36,5 +47,7 @@ namespace Tecgraf
         Vertical,
     }
 
+
+    
 
 }

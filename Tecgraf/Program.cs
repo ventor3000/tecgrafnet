@@ -16,7 +16,7 @@ namespace Tecgraf
             // EnableThemingInScope.EnableThemingInWindows();
 
 
-            EnableThemingInScope.EnableThemingInWindows();
+            WindowsSpecific.EnableThemingInWindows();
 
 
 

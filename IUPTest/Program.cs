@@ -16,19 +16,21 @@ namespace Tecgraf
             // EnableThemingInScope.EnableThemingInWindows();
 
 
-            EnableThemingInScope.EnableThemingInWindows();
+            WindowsSpecific.EnableThemingInWindows();
 
 
             
             Iup.Open();
 
 
-            string pp=IupNative.IupGetGlobal("DRIVER");
+            string lang=IupNative.IupGetLanguage();
 
-            IupNative.IupVersionShow();
+           // IupNative.IupSetLanguage("PORTUGUESE");
 
-            string ss = IupNative.IupVersionDate();
-            IupNative.IupMessage("Version", str);
+           // string cancel=IupNative.IupGetLanguageString("IUP_CANCEL");
+
+            
+
 
             Button btn = new Button("Min knapp åäö") { Expand = Expand.Yes };
             Button knapp1;
@@ -43,6 +45,7 @@ namespace Tecgraf
             { Expand = Expand.Yes };
 
             btn.SetAttribute("TITLE", "hej");
+           // IupNative.IupSetStrf(btn.Handle, "TITLE", "%s", __arglist("hej"));
 
             btn.ButtonCB += Btn_BUTTON_CB1;
             dlg.MoveCB += Dlg_MoveCB;

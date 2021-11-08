@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Tecgraf
@@ -12,5 +13,11 @@ namespace Tecgraf
             foreach (Control c in children)
                 Append(c);
         }
+
+        /*public Size Margin
+        {
+            
+        }*/
+
     }
 }

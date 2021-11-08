@@ -15,7 +15,7 @@ namespace Tecgraf
         }
 
 
-        public int Show()
+        public IupError Show()
         {
             return IupShow(Handle);
         }

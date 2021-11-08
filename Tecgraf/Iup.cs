@@ -7,11 +7,13 @@ namespace Tecgraf
 {
     public static class Iup
     {
-        public static void Open()
+        public static IupError Open()
         {
+            WindowsSpecific.AddNativeDllPath();
+
             int argc = 0;
             string argv = string.Empty;
-            IupOpen(ref argc, ref argv);
+            return IupOpen(ref argc, ref argv);
         }
     }
 }

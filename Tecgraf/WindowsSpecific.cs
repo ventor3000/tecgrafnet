@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -59,7 +60,7 @@ namespace Tecgraf
     }*/
 
     [SuppressUnmanagedCodeSecurity]
-    public static class EnableThemingInScope
+    public static class WindowsSpecific
     {
 
 
@@ -160,6 +161,25 @@ namespace Tecgraf
 
             return true;
         }*/
+
+
+        public static void AddNativeDllPath()
+        {
+            if (IsRunningOnWindows)
+            {
+                string appPath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]),(IntPtr.Size == 4)? "tec32":"tec64");
+                Environment.SetEnvironmentVariable("PATH", appPath+";"+Environment.GetEnvironmentVariable("PATH"));
+            }
+
+        }
+
+        public static bool IsRunningOnWindows
+        {
+            get
+            {
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            }
+        }
 
     }
 
