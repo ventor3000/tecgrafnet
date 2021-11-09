@@ -22,6 +22,7 @@ namespace Tecgraf
         Right=51
     }
 
+    /*
     [Flags]
     public enum ModifierStatus
     {
@@ -36,7 +37,10 @@ namespace Tecgraf
         System = 128,
         Button4 = 256,
         Button5 = 512
-    }
+    }*/
+
+    
+    
 
 
     public enum Expand
@@ -47,7 +51,45 @@ namespace Tecgraf
         Vertical,
     }
 
+    public enum Cursor
+    {
+        None,
+        Arrow,
+        Busy,
+        Cross,
+        Hand,
+        Help,
+        Move,
+        Pen,
+        ResizeN,
+        ResizeS,
+        ResizeNS,
+        ResizeW,
+        ResizeE,
+        ResizeWE,
+        ResizeNE,
+        ResizeSW,
+        ResizeNW,
+        ResizeSE,
+        Text,
+        /// <summary>
+        /// Windows only
+        /// </summary>
+        AppStarting,
+        /// <summary>
+        /// Windows only
+        /// </summary>
+        No,
+        UpArrow
+    }
 
-    
+    public enum CBRes
+    {
+        Ignore=-1,
+        Default=-2,
+        Close=-3,
+        Continue=-4
+    }
+
 
 }

@@ -16,7 +16,7 @@ namespace Tecgraf
 
 
         #region BUTTON_CB
-
+        /*
         EventHandler<ButtonCBEventArgs> buttonCBHandler;
 
         public event EventHandler<ButtonCBEventArgs> ButtonCB
@@ -35,15 +35,48 @@ namespace Tecgraf
             }
         }
 
-        private int OnButtonCB(IntPtr sender, int btn, int pressed, int x, int y, string status)
+        private CBRes OnButtonCB(IntPtr sender, int btn, int pressed, int x, int y, string status)
         {
 
             buttonCBHandler?.Invoke(sender, new ButtonCBEventArgs(pressed != 0, x, y, EventUtils.StringToModifierStatus(status)));
             return 0;
-        }
+        }*/
 
         #endregion BUTTON_CB
 
+
+        public IcallbackButtonCB ButtonCB
+        {
+            get
+            {
+                IntPtr cb = IupGetCallback(Handle, "BUTTON_CB");
+                if (cb == IntPtr.Zero) return null;
+                return Marshal.GetDelegateForFunctionPointer<IcallbackButtonCB>(cb);
+            }
+
+            set
+            {
+                //IntPtr funcptr=Marshal.GetFunctionPointerForDelegate(value);
+                IupSetCallback(Handle, "BUTTON_CB", value);
+            }
+        }
+
+        public Icallback Action {
+
+            get
+            {
+                IntPtr cb = IupGetCallback(Handle, "ACTION");
+                if (cb == IntPtr.Zero) return null;
+                return Marshal.GetDelegateForFunctionPointer<Icallback>(cb);
+            }
+
+            set
+            {
+                IupSetCallback(Handle, "ACTION", value);
+            }       
+        }
+
+    /*
 
         #region ACTION
         EventHandler<EventArgs> actionHandler;
@@ -70,7 +103,7 @@ namespace Tecgraf
             actionHandler?.Invoke(sender, EventArgs.Empty);
             return 0;
         }
-        #endregion ACTION
+        #endregion ACTION*/
 
     }
 }

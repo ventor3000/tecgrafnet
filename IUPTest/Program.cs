@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 
@@ -32,27 +33,28 @@ namespace Tecgraf
             
 
 
-            Button btn = new Button("Min knapp åäö") { Expand = Expand.Yes };
+
+
+
             Button knapp1;
             Dialog dlg = new Dialog("My dialog",
                 new VBox(
-                    btn,
-                    knapp1=new Button("Knapp 1") { Expand=Expand.Horizontal },
-                    new Button("Knapp 2") { Expand = Expand.Yes },
-                    new Button("Knapp 3") { Expand = Expand.Yes }
+                    knapp1 = new Button("Knapp 1") { Expand = Expand.Horizontal,ButtonCB= MyKnapp },
+                    new Button("Knapp 2") { Expand = Expand.Horizontal },
+                    new Canvas() { Expand = Expand.Yes },
+                    new Button("Knapp 3") { Expand = Expand.Horizontal }
                 )
+                { Margin = new Size(8,8),Gap=4 }
             )
             { Expand = Expand.Yes };
 
-            btn.SetAttribute("TITLE", "hej");
-           // IupNative.IupSetStrf(btn.Handle, "TITLE", "%s", __arglist("hej"));
+            
+            //IupNative.Set
 
-            btn.ButtonCB += Btn_BUTTON_CB1;
-            dlg.MoveCB += Dlg_MoveCB;
 
             dlg.Show();
 
-            knapp1.Action += Knapp1_Action;
+            
             
 
             IupNative.IupMainLoop();
@@ -66,11 +68,23 @@ namespace Tecgraf
 
         }
 
-        private static void Knapp1_Action(object sender, EventArgs e)
+        private static CBRes MyKnapp(IntPtr sender, int button, bool pressed, int x, int y, ModifierStatus status)
         {
+            if (!pressed)
+            {
+                int dd = 0;
+            }
+            
+            return CBRes.Default;
 
-            IupNative.IupMessage("Meddelande", IupNative.IupVersion());
+        }
 
+        
+        private static CBRes Knapp1_Action(IntPtr sender)
+        {
+            IupNative.IupMessage("Hello", "World");
+
+            return 0;
         }
 
         private static void Dlg_MoveCB(object sender, MoveCBEventArgs e)

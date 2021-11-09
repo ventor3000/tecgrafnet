@@ -8,7 +8,7 @@ namespace Tecgraf
     {
         public IntPtr Handle;
 
-        protected Element(IntPtr handle)
+        internal Element(IntPtr handle)
         {
             this.Handle = handle;
         }

@@ -21,7 +21,8 @@ namespace Tecgraf
         }
 
 
-
+        
+        /*
 
         #region MOVE_CB
 
@@ -43,14 +44,14 @@ namespace Tecgraf
             }
         }
 
-        private int OnMoveCB(IntPtr sender, int x, int y)
+        private CBRes OnMoveCB(IntPtr sender, int x, int y)
         {
 
             moveCBHandler?.Invoke(sender, new MoveCBEventArgs(x, y));
             return 0;
         }
 
-        #endregion BUTTON_CB
+        #endregion BUTTON_CB*/
 
     }
 }
