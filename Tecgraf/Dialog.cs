@@ -20,6 +20,12 @@ namespace Tecgraf
             return IupShow(Handle);
         }
 
+        public string Title
+        {
+            get => IupGetAttribute(Handle, "TITLE");
+            set => IupSetStrAttribute(Handle, "TITLE", value);
+        }
+
 
         
         /*

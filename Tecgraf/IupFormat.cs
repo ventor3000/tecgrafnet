@@ -65,7 +65,9 @@ namespace Tecgraf
 
         }
 
-        static T AttToEnum<T>(string attname, params object[] str_obj)
+        
+
+        public static T AttToEnum<T>(string attname, params object[] str_obj)
         {
             for (int i = 0; i < str_obj.Length; i += 2)
             {
@@ -76,7 +78,7 @@ namespace Tecgraf
             throw new Exception(attname + " attribute could not be mapped");
         }
 
-        static string EnumToAtt<T>(T _enum, params object[] str_obj)
+        public static string EnumToAtt<T>(T _enum, params object[] str_obj)
         {
             for (int i = 0; i < str_obj.Length; i += 2)
             {

@@ -22,6 +22,15 @@ namespace Tecgraf
         Right=51
     }
 
+
+    public enum FileStatus
+    {
+        Cancel = -1,
+        ExistingFile = 0,
+        NewFile = 1
+    }
+
+
     /*
     [Flags]
     public enum ModifierStatus
@@ -39,8 +48,8 @@ namespace Tecgraf
         Button5 = 512
     }*/
 
-    
-    
+
+
 
 
     public enum Expand
@@ -90,6 +99,17 @@ namespace Tecgraf
         Close=-3,
         Continue=-4
     }
+
+    public enum MessageButtons
+    {
+        Ok,
+        OkCancel,
+        RetryCancel,
+        YesNo,
+        YesNoCancel
+    }
+
+     
 
 
 }

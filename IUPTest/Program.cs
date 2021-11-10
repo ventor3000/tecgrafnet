@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-
-
+using System.Text;
 
 namespace Tecgraf
 {
     unsafe class Program
     {
+
+        static Dialog dlg;
+
         static void Main(string[] args)
         {
             int argc = args.Length;
@@ -19,40 +21,17 @@ namespace Tecgraf
 
             WindowsSpecific.EnableThemingInWindows();
 
-
             
             Iup.Open();
 
 
             string lang=IupNative.IupGetLanguage();
 
-           // IupNative.IupSetLanguage("PORTUGUESE");
+            // IupNative.IupSetLanguage("PORTUGUESE");
 
-           // string cancel=IupNative.IupGetLanguageString("IUP_CANCEL");
-
-            
+            // string cancel=IupNative.IupGetLanguageString("IUP_CANCEL");
 
 
-
-
-
-            Button knapp1;
-            Dialog dlg = new Dialog("My dialog",
-                new VBox(
-                    knapp1 = new Button("Knapp 1") { Expand = Expand.Horizontal,ButtonCB= MyKnapp },
-                    new Button("Knapp 2") { Expand = Expand.Horizontal },
-                    new Canvas() { Expand = Expand.Yes },
-                    new Button("Knapp 3") { Expand = Expand.Horizontal }
-                )
-                { Margin = new Size(8,8),Gap=4 }
-            )
-            { Expand = Expand.Yes };
-
-            
-            //IupNative.Set
-
-
-            dlg.Show();
 
             
             
@@ -68,21 +47,33 @@ namespace Tecgraf
 
         }
 
-        private static CBRes MyKnapp(IntPtr sender, int button, bool pressed, int x, int y, ModifierStatus status)
+        private static CBRes Knapp1Action(IntPtr sender)
         {
-            if (!pressed)
-            {
-                int dd = 0;
-            }
+            Color c = Color.Red;
+            if (Iup.GetColor(100, 100, ref c))
+                Iup.Message(c.ToString()); 
             
             return CBRes.Default;
+        }
+
+        private static CBRes ViewportMotion(IntPtr sender, int x, int y, ModifierStatus status)
+        {
+            dlg.Title = x.ToString() + " " + y.ToString() + " " + status.ToString();
+            return CBRes.Default;
+        }
+
+        private static CBRes MyKnapp(IntPtr sender, MouseButton button, bool pressed, int x, int y, ModifierStatus status)
+        {
+            dlg.Title = button.ToString()+(pressed?" Down ":" Up ") + status.ToString();
+            
+            return CBRes.Ignore;
 
         }
 
         
         private static CBRes Knapp1_Action(IntPtr sender)
         {
-            IupNative.IupMessage("Hello", "World");
+            
 
             return 0;
         }
@@ -92,21 +83,7 @@ namespace Tecgraf
             IupNative.IupSetStrAttribute((IntPtr)sender, "TITLE", e.X.ToString() + " " + e.Y.ToString());
         }
 
-        private static void Dlg_ButtonCB(object sender, ButtonCBEventArgs e)
-        {
-            
-        }
-
-        private static void Btn_BUTTON_CB1(object sender, ButtonCBEventArgs e)
-        {
-            ///   IUPNative.IupMessage("Meddelande", "knapp");
-         //   IUPNative.IupSetStrAttribute((IntPtr)sender, "EXPAND", "YES");
-
-            //IUPNative.IupSetStrAttribute((IntPtr)sender, "TITLE", e.ModifierStatus.ToString());
-
-            IupNative.IupExitLoop();
-        }
-
+       
 
 
         

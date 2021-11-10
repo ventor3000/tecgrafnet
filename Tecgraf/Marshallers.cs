@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Tecgraf
 {
-    public class ButtonCBStatusMarshaller : ICustomMarshaler
+    public class ModifierStatusMarshaller : ICustomMarshaler
     {
-        static ButtonCBStatusMarshaller static_instance;
+        static ModifierStatusMarshaller static_instance;
 
         public IntPtr MarshalManagedToNative(object managedObj)
         {
@@ -40,7 +40,7 @@ namespace Tecgraf
         {
             if (static_instance == null)
             {
-                return static_instance = new ButtonCBStatusMarshaller();
+                return static_instance = new ModifierStatusMarshaller();
             }
             return static_instance;
         }

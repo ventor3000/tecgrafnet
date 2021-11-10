@@ -4,10 +4,7 @@ using System.Text;
 
 namespace Tecgraf
 {
-    public static class IupUtils
-    {
-       
-    }
+    
 
     public class ModifierStatus
     {

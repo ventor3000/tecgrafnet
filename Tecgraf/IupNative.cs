@@ -22,7 +22,10 @@ namespace Tecgraf
         public unsafe delegate CBRes IcallbackII(IntPtr sender, int x, int y);
 
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes IcallbackButtonCB(IntPtr sender, int button, [MarshalAs(UnmanagedType.Bool)]bool pressed, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ButtonCBStatusMarshaller))] ModifierStatus status);
+        public unsafe delegate CBRes IcallbackButtonCB(IntPtr sender, MouseButton button, [MarshalAs(UnmanagedType.Bool)]bool pressed, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
+        //int function(Ihandle* ih, int x, int y, char* status);[in C]
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate CBRes IcallbackMotionCB(IntPtr sender, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
 
 
         #endregion
@@ -396,9 +399,6 @@ namespace Tecgraf
 
 
 
-        // multiple overloads for IupSetCallback, we must match protos. with overrides in .NET
-
-
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetCallback", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupSetCallback(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, Delegate func);
 
@@ -550,7 +550,7 @@ namespace Tecgraf
         public static extern IntPtr IupCbox(IntPtr child);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupCboxv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupCboxv(IntPtr children);
+        public static extern IntPtr IupCboxv(ref IntPtr children);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSbox", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupSbox(IntPtr child);
@@ -568,13 +568,13 @@ namespace Tecgraf
         public static extern IntPtr IupGridBox(IntPtr child);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGridBoxv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGridBoxv(IntPtr children);
+        public static extern IntPtr IupGridBoxv(ref IntPtr children);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMultiBox", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupMultiBox(IntPtr child);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMultiBoxv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupMultiBoxv(IntPtr children);
+        public static extern IntPtr IupMultiBoxv(ref IntPtr children);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupExpander", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupExpander(IntPtr child);
@@ -612,9 +612,9 @@ namespace Tecgraf
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenu", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupMenu(IntPtr child);
 
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenuv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupMenuv(IntPtr children);
-
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenuv", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupMenuv(IntPtr children,__arglist);
+        */
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupButton", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupButton([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string action);
@@ -733,13 +733,148 @@ namespace Tecgraf
         #endregion ELEMENT_CREATION
 
 
-        
+        #region UTILITIES
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStringCompare", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupStringCompare([MarshalAs(UnmanagedType.LPUTF8Str)] string str1, [MarshalAs(UnmanagedType.LPUTF8Str)] string str2, [MarshalAs(UnmanagedType.Bool)] bool casesensitive, [MarshalAs(UnmanagedType.Bool)] bool lexicographic);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSaveImageAsText", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupSaveImageAsText(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string filename, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupImageGetHandle", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupImageGetHandle([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTextConvertLinColToPos", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupTextConvertLinColToPos(IntPtr ih, int lin, int col, out int pos);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTextConvertPosToLinCol", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupTextConvertPosToLinCol(IntPtr ih, int pos, out int lin, out int col);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupConvertXYToPos", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupConvertXYToPos(IntPtr ih, int x, int y);
 
 
+        /* OLD names, skipped in .NET wrapper so they are never used
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStoreGlobal", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupStoreGlobal([MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStoreAttribute", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupStoreAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetfAttribute", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupSetfAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string format,__arglist);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStoreAttributeId", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupStoreAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetfAttributeId", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupSetfAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string f,__arglist);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStoreAttributeId2", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupStoreAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetfAttributeId2", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupSetfAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string format,__arglist);
+        */
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTreeSetUserId", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupTreeSetUserId(IntPtr ih, int id, IntPtr userid);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTreeGetUserId", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupTreeGetUserId(IntPtr ih, int id);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTreeGetId", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupTreeGetId(IntPtr ih, IntPtr userid);
+
+        /* deprecated, use IupSetAttributeHandleId
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTreeSetAttributeHandle", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupTreeSetAttributeHandle(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, IntPtr ih_named);
+        */
+
+        #endregion UTILITIES
+
+
+        #region PREDEFINED_DIALOGS
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFileDlg", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupFileDlg();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMessageDlg", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupMessageDlg();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupColorDlg", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupColorDlg();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFontDlg", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupFontDlg();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupProgressDlg", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupProgressDlg();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetFile", CallingConvention = CallingConvention.Cdecl)]
+        public static extern FileStatus IupGetFile([In][Out] StringBuilder sb);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMessage", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupMessage([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string msg);
 
-        
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMessagef", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupMessagef([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string format__arglist);*/
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMessageError", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void IupMessageError(IntPtr parent, [MarshalAs(UnmanagedType.LPUTF8Str)] string message);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMessageAlarm", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupMessageAlarm(IntPtr parent, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string message, [MarshalAs(UnmanagedType.LPUTF8Str)] string buttons);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupAlarm", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupAlarm([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string msg, [MarshalAs(UnmanagedType.LPUTF8Str)] string b1, [MarshalAs(UnmanagedType.LPUTF8Str)] string b2, [MarshalAs(UnmanagedType.LPUTF8Str)] string b3);
+
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupScanf", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupScanf([MarshalAs(UnmanagedType.LPUTF8Str)] string format,__arglist);*/
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupListDialog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupListDialog(int type, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, int size, ref IntPtr list, int op, int max_col, int max_lin,[In][Out] int[] marks);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetText", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IupGetText([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)][In][Out]StringBuilder text, int maxsize);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetColor", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IupGetColor(int x, int y, ref byte r, ref byte g, ref byte b);
+
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetParam", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupGetParam([MarshalAs(UnmanagedType.LPUTF8Str)] string title, IntPtr action, IntPtr user_data, [MarshalAs(UnmanagedType.LPUTF8Str)] string format,__arglist);
+        */
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetParamv", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int IupGetParamv([MarshalAs(UnmanagedType.LPUTF8Str)] string title, IntPtr action, IntPtr user_data, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int param_count, int param_extra, ref IntPtr param_data);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupParam", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupParam([MarshalAs(UnmanagedType.LPUTF8Str)] string format);
+
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupParamBox", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupParamBox(IntPtr param,__arglist);*/
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupParamBoxv", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupParamBoxv(IntPtr param_array);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLayoutDialog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupLayoutDialog(IntPtr dialog);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupElementPropertiesDialog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupElementPropertiesDialog(IntPtr parent, IntPtr elem);
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGlobalsDialog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupGlobalsDialog();
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupClassInfoDialog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupClassInfoDialog(IntPtr parent);
+
+        #endregion
+
     }
+
+
+
+   
 }
