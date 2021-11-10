@@ -109,6 +109,12 @@ namespace Tecgraf
         YesNoCancel
     }
 
+
+    public enum RecordInputMode
+    {
+        Binary=0,
+        Text=1
+    }
      
 
 

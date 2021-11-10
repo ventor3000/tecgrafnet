@@ -53,10 +53,10 @@ namespace Tecgraf
 
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLoopStep", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupLoopStep();
+        public static extern CBRes IupLoopStep();
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLoopStepWait", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupLoopStepWait();
+        public static extern CBRes IupLoopStepWait();
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMainLoopLevel", CallingConvention = CallingConvention.Cdecl)]
         public static extern int IupMainLoopLevel();
@@ -71,10 +71,10 @@ namespace Tecgraf
         public static extern void IupPostMessage(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string s, int i, double d, IntPtr p);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRecordInput", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupRecordInput([MarshalAs(UnmanagedType.LPUTF8Str)] string filename, int mode);
+        public static extern IupError IupRecordInput([MarshalAs(UnmanagedType.LPUTF8Str)] string filename, RecordInputMode mode);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupPlayInput", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupPlayInput([MarshalAs(UnmanagedType.LPUTF8Str)] string filename);
+        public static extern IupError IupPlayInput([MarshalAs(UnmanagedType.LPUTF8Str)] string filename);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupUpdate", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupUpdate(IntPtr ih);
@@ -83,7 +83,7 @@ namespace Tecgraf
         public static extern void IupUpdateChildren(IntPtr ih);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRedraw", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupRedraw(IntPtr ih, int children);
+        public static extern void IupRedraw(IntPtr ih, [MarshalAs(UnmanagedType.Bool)] bool children);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRefresh", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupRefresh(IntPtr ih);
@@ -610,12 +610,13 @@ namespace Tecgraf
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSeparator", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupSeparator();
 
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenu", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupMenu(IntPtr child);
-
-        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenuv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupMenuv(IntPtr children,__arglist);
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenu", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupMenu(IntPtr child__arglist);
         */
+
+        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMenuv", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupMenuv(ref IntPtr children);
+        
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupButton", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupButton([MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string action);
@@ -684,17 +685,17 @@ namespace Tecgraf
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFlatTree", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupFlatTree();
 
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTabs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupTabs(IntPtr child);
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTabs", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupTabs(IntPtr child,__Arglist);*/
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTabsv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupTabsv(IntPtr children);
+        public static extern IntPtr IupTabsv(ref IntPtr children);
 
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFlatTabs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupFlatTabs(IntPtr first);
+        /*[SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFlatTabs", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr IupFlatTabs(IntPtr first,__arglist);*/
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupFlatTabsv", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupFlatTabsv(IntPtr children);
+        public static extern IntPtr IupFlatTabsv(ref IntPtr children);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupTree", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupTree();

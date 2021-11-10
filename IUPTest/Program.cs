@@ -9,6 +9,7 @@ namespace Tecgraf
     {
 
         static Dialog dlg;
+        static Gauge gauge;
 
         static void Main(string[] args)
         {
@@ -27,6 +28,18 @@ namespace Tecgraf
 
             string lang=IupNative.IupGetLanguage();
 
+            dlg = new Dialog("Min dialog",
+                new VBox(
+                    new Button("Knapp1") { Action = Knapp1Action } ,
+                    gauge=new Gauge() { Value = 0.5 },
+                    new Button("Knapp2")
+                )
+            );
+
+            dlg.Show();
+            
+
+
             // IupNative.IupSetLanguage("PORTUGUESE");
 
             // string cancel=IupNative.IupGetLanguageString("IUP_CANCEL");
@@ -39,22 +52,17 @@ namespace Tecgraf
             IupNative.IupMainLoop();
 
 
-            bool op=IupNative.IupIsOpened();
             IupNative.IupClose();
-
-            op = IupNative.IupIsOpened();
 
 
         }
 
         private static CBRes Knapp1Action(IntPtr sender)
         {
-            Color c = Color.Red;
-            if (Iup.GetColor(100, 100, ref c))
-                Iup.Message(c.ToString()); 
-            
+            gauge.Value = 0.3;
             return CBRes.Default;
         }
+          
 
         private static CBRes ViewportMotion(IntPtr sender, int x, int y, ModifierStatus status)
         {
