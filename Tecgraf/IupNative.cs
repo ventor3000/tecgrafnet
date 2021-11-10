@@ -579,6 +579,7 @@ namespace Tecgraf
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupExpander", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupExpander(IntPtr child);
 
+
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupDetachBox", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr IupDetachBox(IntPtr child);
 
