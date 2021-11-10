@@ -46,20 +46,13 @@ namespace Tecgraf
 
 
 
-            
-            
-
             IupNative.IupMainLoop();
-
-
             IupNative.IupClose();
-
-
         }
 
         private static CBRes Knapp1Action(IntPtr sender)
         {
-            gauge.Value = 0.3;
+            Iup.VersionShow();
             return CBRes.Default;
         }
           

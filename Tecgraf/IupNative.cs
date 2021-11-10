@@ -110,7 +110,7 @@ namespace Tecgraf
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLoadBuffer", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr IupLoadBufferPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string buffer);
-        public static string IupVersion(string buffer) => Marshal.PtrToStringUTF8(IupLoadBufferPtr(buffer));
+        public static string IupLoadBuffer(string buffer) => Marshal.PtrToStringUTF8(IupLoadBufferPtr(buffer));
 
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupVersion", CallingConvention = CallingConvention.Cdecl)]

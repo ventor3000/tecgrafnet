@@ -48,150 +48,57 @@ namespace Tecgraf
         public static void Update(IntPtr ih) => IupUpdate(ih);
         public static void UpdateChildren(IntPtr ih) => IupUpdateChildren(ih);
         public static void Redraw(IntPtr ih, bool children) => IupRedraw(ih, children);
+        public static void Refresh(IntPtr ih) => IupRefresh(ih);
+        public static void RefreshChildren(IntPtr ih) => IupRefreshChildren(ih);
+        public static bool Execute(string filename, string parameters) => IupExecute(filename, parameters)>0;
+        public static bool ExecuteWait(string filename, string parameters) => IupExecuteWait(filename, parameters) > 0;
+        public static bool Help(string url) => IupHelp(url)>0;
+        public static void Log(string type, string format) => IupLog(type, format);
+        public static string Load(string filename) => IupLoad(filename);
+        public static string LoadBuffer(string buffer) => IupLoadBuffer(buffer);
+        public static string Version() => IupVersion();
+        public static string VersionDate() => IupVersionDate();
+        public static int VersionNumber() => IupVersionNumber();
+        public static void VersionShow() => IupVersionShow();
+        public static void SetLanguage(string lng) => IupSetLanguage(lng);
+        public static void GetLanguage() => IupGetLanguage();
+        public static void StoreLanguageString(string name, string str) => IupStoreLanguageString(name, str);
+        public static string GetLanguageString(string name) => IupGetLanguageString(name);
+        public static void SetLanguagePack(IntPtr ih) => IupSetLanguagePack(ih);
+        public static void Destroy(IntPtr ih) => IupDestroy(ih);
+        public static void Detach(IntPtr child) => IupDetach(child);
+        public static IntPtr Append(IntPtr ih, IntPtr child) => IupAppend(ih, child);
+        public static IntPtr Insert(IntPtr ih, IntPtr ref_child, IntPtr child) => IupInsert(ih, ref_child, child);
+        public static IntPtr GetChild(IntPtr ih, int pos) => IupGetChild(ih, pos);
+        public static int GetChildPos(IntPtr ih,IntPtr child)=>IupGetChildPos(ih, child);
+        public static int GetChildCount(IntPtr ih) => IupGetChildCount(ih);
+        public static IntPtr GetNextChild(IntPtr ih, IntPtr child)=>IupGetNextChild(ih,child);
+        public static IntPtr GetBrother(IntPtr ih) => IupGetBrother(ih);
+        public static IntPtr GetParent(IntPtr ih) => IupGetParent(ih);
+        public static IntPtr GetDialog(IntPtr ih) => IupGetDialog(ih);
+        public static IntPtr GetDialogChild(IntPtr ih, string name) => IupGetDialogChild(ih, name);
+        public static IupError Reparent(IntPtr ih, IntPtr new_parent, IntPtr ref_child) => IupReparent(ih, new_parent, ref_child);
+        public static IupError Popup(IntPtr ih, int x, int y) => IupPopup(ih, x, y);
+        public static IupError Show(IntPtr ih) => IupShow(ih);
+        public static IupError ShowXY(IntPtr ih) => IupShow(ih);
+        public static IupError Hide(IntPtr ih) => IupHide(ih);
+        public static IupError Map(IntPtr ih) => IupMap(ih);
+        public static void Unmap(IntPtr ih) => IupUnmap(ih);
+        public static void ResetAttribute(IntPtr ih, string name) => IupResetAttribute(ih, name);
+        
+        public static string[] GetAllAttributes(IntPtr ih)
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetAllAttributes(ih, ref dummy, 0);
+
+            IntPtr[] ptrstr = new IntPtr[n];
+            IupGetAllAttributes(ih, ref ptrstr[0], n);
+
+
+
+        }
 
         /*
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRedraw", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupRedraw(IntPtr ih, int children);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRefresh", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupRefresh(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupRefreshChildren", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupRefreshChildren(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupExecute", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupExecute([MarshalAs(UnmanagedType.LPUTF8Str)] string filename, [MarshalAs(UnmanagedType.LPUTF8Str)] string parameters);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupExecuteWait", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupExecuteWait([MarshalAs(UnmanagedType.LPUTF8Str)] string filename, [MarshalAs(UnmanagedType.LPUTF8Str)] string parameters);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupHelp", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupHelp([MarshalAs(UnmanagedType.LPUTF8Str)] string url);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupLog([MarshalAs(UnmanagedType.LPUTF8Str)] string type, [MarshalAs(UnmanagedType.LPUTF8Str)] string format);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLoad", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupLoadPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string filename);
-        public static string IupLoad(string filename) => Marshal.PtrToStringUTF8(IupLoadPtr(filename));
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupLoadBuffer", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupLoadBufferPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string buffer);
-        public static string IupVersion(string buffer) => Marshal.PtrToStringUTF8(IupLoadBufferPtr(buffer));
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupVersion", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupVersionPtr();
-        public static string IupVersion() => Marshal.PtrToStringUTF8(IupVersionPtr());
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupVersionDate", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupVersionDatePtr();
-        public static string IupVersionDate() => Marshal.PtrToStringUTF8(IupVersionDatePtr());
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupVersionNumber", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupVersionNumber();
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupVersionShow", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupVersionShow();
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetLanguage", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetLanguage([MarshalAs(UnmanagedType.LPUTF8Str)] string lng);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetLanguage", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetLanguagePtr();
-        public static string IupGetLanguage() => Marshal.PtrToStringUTF8(IupGetLanguagePtr());
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetLanguageString", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetLanguageString([MarshalAs(UnmanagedType.LPUTF8Str)] string name, IntPtr str);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupStoreLanguageString", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupStoreLanguageString([MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string str);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetLanguageString", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetLanguageStringPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-        public static string IupGetLanguageString(string name) => Marshal.PtrToStringUTF8(IupGetLanguageStringPtr(name));
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetLanguagePack", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetLanguagePack(IntPtr ih);
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupDestroy", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupDestroy(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupDetach", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupDetach(IntPtr child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupAppend", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupAppend(IntPtr ih, IntPtr child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupInsert", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupInsert(IntPtr ih, IntPtr ref_child, IntPtr child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetChild", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetChild(IntPtr ih, int pos);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetChildPos", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetChildPos(IntPtr ih, IntPtr child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetChildCount", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetChildCount(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetNextChild", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetNextChild(IntPtr ih, IntPtr child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetBrother", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetBrother(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetParent", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetParent(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetDialog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetDialog(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetDialogChild", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetDialogChild(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupReparent", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupReparent(IntPtr ih, IntPtr new_parent, IntPtr ref_child);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupPopup", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupPopup(IntPtr ih, int x, int y);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupShow", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupShow(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupShowXY", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupShowXY(IntPtr ih, int x, int y);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupHide", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupHide(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupMap", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IupError IupMap(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupUnmap", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupUnmap(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupResetAttribute", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupResetAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAllAttributes", CallingConvention = CallingConvention.Cdecl)]
         public static extern int IupGetAllAttributes(IntPtr ih, ref IntPtr names, int n);
