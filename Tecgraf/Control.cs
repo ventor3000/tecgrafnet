@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using static Tecgraf.IupNative;
 
 
 namespace Tecgraf
@@ -35,10 +34,10 @@ namespace Tecgraf
             {
                 switch(value)
                 {
-                    case Expand.Vertical: IupSetStrAttribute(Handle, "EXPAND", "VERTICAL");return;
-                    case Expand.Horizontal: IupSetStrAttribute(Handle, "EXPAND", "HORIZONTAL"); return;
-                    case Expand.Yes: IupSetStrAttribute(Handle, "EXPAND", "YES"); return;
-                    case Expand.No: IupSetStrAttribute(Handle, "EXPAND", "NO"); return;
+                    case Expand.Vertical: Iup.SetAttribute(Handle, "EXPAND", "VERTICAL");return;
+                    case Expand.Horizontal: Iup.SetAttribute(Handle, "EXPAND", "HORIZONTAL"); return;
+                    case Expand.Yes: Iup.SetAttribute(Handle, "EXPAND", "YES"); return;
+                    case Expand.No: Iup.SetAttribute(Handle, "EXPAND", "NO"); return;
                 }
             }
         }

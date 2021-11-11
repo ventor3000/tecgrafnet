@@ -2,16 +2,38 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using static Tecgraf.IupNative;
 
 namespace Tecgraf
 {
+
+    #region CALLBACKS
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes Icallback(IntPtr sender);
+
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes IcallbackIIIIS(IntPtr sender, int button, int pressed, int x, int y, string status);
+
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes IcallbackII(IntPtr sender, int x, int y);
+
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes IcallbackButtonCB(IntPtr sender, MouseButton button, [MarshalAs(UnmanagedType.Bool)] bool pressed, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
+
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes IcallbackMotionCB(IntPtr sender, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
+
+    #endregion
+
     public static class Iup
     {
+
+
        
 
-        
+
 
         #region MAIN_API
 
@@ -61,7 +83,7 @@ namespace Tecgraf
         public static int VersionNumber() => IupVersionNumber();
         public static void VersionShow() => IupVersionShow();
         public static void SetLanguage(string lng) => IupSetLanguage(lng);
-        public static void GetLanguage() => IupGetLanguage();
+        public static string GetLanguage() => IupGetLanguage();
         public static void StoreLanguageString(string name, string str) => IupStoreLanguageString(name, str);
         public static string GetLanguageString(string name) => IupGetLanguageString(name);
         public static void SetLanguagePack(IntPtr ih) => IupSetLanguagePack(ih);
@@ -92,262 +114,166 @@ namespace Tecgraf
             int n = IupGetAllAttributes(ih, ref dummy, 0);
 
             IntPtr[] ptrstr = new IntPtr[n];
-            IupGetAllAttributes(ih, ref ptrstr[0], n);
+            if(n>0)
+                IupGetAllAttributes(ih, ref ptrstr[0], n);
 
+            string[] attrs = new string[n];
+            for (int i = 0; i < n; i++)
+                attrs[i] = Marshal.PtrToStringUTF8(ptrstr[i]);
 
-
+            return attrs;
         }
 
-        /*
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAllAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetAllAttributes(IntPtr ih, ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupCopyAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupCopyAttributes(IntPtr src_ih, IntPtr dst_ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAtt", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupSetAtt([MarshalAs(UnmanagedType.LPUTF8Str)] string handle_name, IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupSetAttributes(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string str);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributes", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetAttributesPtr(IntPtr ih);
-        public static string IupGetAttributes(IntPtr ih) => Marshal.PtrToStringUTF8(IupGetAttributesPtr(ih));
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttribute", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, IntPtr value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrAttribute", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetInt", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetInt(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetFloat", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetFloat(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, float value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetDouble", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetDouble(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, double value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetRGB", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetRGB(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, byte r, byte g, byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetRGBA", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetRGBA(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, byte r, byte g, byte b, byte a);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttribute", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetAttributePtr(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-        public static string IupGetAttribute(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name) => Marshal.PtrToStringUTF8(IupGetAttributePtr(ih, name));
-
-
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetInt", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetInt(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetInt2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetInt2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetIntInt", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetIntInt(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, out int i1, out int i2);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetFloat", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float IupGetFloat(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetDouble", CallingConvention = CallingConvention.Cdecl)]
-        public static extern double IupGetDouble(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetRGB", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupGetRGB(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, out byte r, out byte g, out byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetRGBA", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupGetRGBA(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, out byte r, out byte g, out byte b, out byte a);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrAttributeId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-       
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetIntId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetIntId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, int value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetFloatId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetFloatId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, float value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetDoubleId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetDoubleId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, double value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetRGBId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetRGBId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, byte r, byte g, byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributeId", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetAttributeIdPtr(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id);
-        public static string IupGetAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id) => Marshal.PtrToStringUTF8(IupGetAttributeIdPtr(ih, name, id));
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetIntId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetIntId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetFloatId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float IupGetFloatId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetDoubleId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern double IupGetDoubleId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetRGBId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupGetRGBId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, out byte r, out byte g, out byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrAttributeId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrfId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrfId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string format);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetIntId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetIntId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, int value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetFloatId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetFloatId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, float value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetDoubleId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetDoubleId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, double value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetRGBId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetRGBId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, byte r, byte g, byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributeId2", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetAttributeId2Ptr(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col);
-        public static string IupGetAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col) => Marshal.PtrToStringAnsi(IupGetAttributeId2Ptr(ih, name, lin, col));
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetIntId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetIntId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetFloatId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float IupGetFloatId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetDoubleId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern double IupGetDoubleId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetRGBId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupGetRGBId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, out byte r, out byte g, out byte b);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetGlobal", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetGlobal([MarshalAs(UnmanagedType.LPUTF8Str)] string name, IntPtr value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrGlobal", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrGlobal([MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetGlobal", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetGlobalPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-        public static string IupGetGlobal(string name) => Marshal.PtrToStringUTF8(IupGetGlobalPtr(name));
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetFocus", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupSetFocus(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetFocus", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetFocus();
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupPreviousField", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupPreviousField(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupNextField", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupNextField(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetCallback", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetCallback(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetCallback", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupSetCallback(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, Delegate func);
-
-       
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetHandle", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetHandle([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetHandle", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupSetHandle([MarshalAs(UnmanagedType.LPUTF8Str)] string name, IntPtr ih);
-
-
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAllNames", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetAllNames(ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAllDialogs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetAllDialogs(ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetName", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetNamePtr(IntPtr ih);
-        public static string IupGetName(IntPtr ih) => Marshal.PtrToStringUTF8(IupGetNamePtr(ih));
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeHandle", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeHandle(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, IntPtr ih_named);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributeHandle", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetAttributeHandle(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeHandleId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeHandleId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, IntPtr ih_named);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributeHandleId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetAttributeHandleId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeHandleId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeHandleId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, IntPtr ih_named);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAttributeHandleId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupGetAttributeHandleId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetClassName", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetClassNamePtr(IntPtr ih);
-        public static string IupGetClassName(IntPtr ih) => Marshal.PtrToStringUTF8(ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetClassType", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr IupGetClassTypePtr(IntPtr ih);
-        public static string IupGetClassType(IntPtr ih) => Marshal.PtrToStringUTF8(ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetAllClasses", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetAllClasses(ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetClassAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetClassAttributes([MarshalAs(UnmanagedType.LPUTF8Str)] string classname, ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupGetClassCallbacks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IupGetClassCallbacks([MarshalAs(UnmanagedType.LPUTF8Str)] string classname, ref IntPtr names, int n);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSaveClassAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSaveClassAttributes(IntPtr ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupCopyClassAttributes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupCopyClassAttributes(IntPtr src_ih, IntPtr dst_ih);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetClassDefaultAttribute", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetClassDefaultAttribute([MarshalAs(UnmanagedType.LPUTF8Str)] string classname, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupClassMatch", CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IupClassMatch(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string classname);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupCreate([MarshalAs(UnmanagedType.LPUTF8Str)] string classname);
-
-        [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupCreatev", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr IupCreatev([MarshalAs(UnmanagedType.LPUTF8Str)] string classname, ref IntPtr pars);
-
-        */
+        public static void CopyAttributes(IntPtr src_ih, IntPtr dst_ih) => IupCopyAttributes(src_ih, dst_ih);
+        public static void SetAtt(string handle_name, IntPtr ih, string name) => IupSetAtt(handle_name, ih, name);
+        public static void SetAttributes(IntPtr ih, string str) => IupSetAttributes(ih, str);
+        public static string GetAttributes(IntPtr ih) => IupGetAttributes(ih);
+        public static void SetAttribute(IntPtr ih, string name, IntPtr value) => IupSetAttribute(ih, name, value);
+        public static void SetAttribute(IntPtr ih, string name, string value) => IupSetStrAttribute(ih, name, value);
+        public static void SetInt(IntPtr ih, string name, int value) => IupSetInt(ih, name, value);
+        public static void SetFloat(IntPtr ih, string name, float value) => IupSetFloat(ih, name, value);
+        public static void SetDouble(IntPtr ih, string name, double value) => IupSetDouble(ih, name, value);
+        public static void SetRGB(IntPtr ih, string name, byte r,byte g,byte b) => IupSetRGB(ih, name,r,g,b);
+        public static void SetRGB(IntPtr ih, string name, Color color) => IupSetRGB(ih, name, color.R, color.G, color.B);
+        public static void SetRGB(IntPtr ih, string name, byte r, byte g, byte b,byte a) => IupSetRGBA(ih, name, r, g, b,a);
+        public static void SetRGBA(IntPtr ih, string name, Color color) => IupSetRGBA(ih, name, color.R, color.G, color.B,color.A);
+        public static string GetAttribute(IntPtr ih, string name) => IupGetAttribute(ih, name);
+        public static int GetInt(IntPtr ih, string name) => IupGetInt(ih, name);
+        public static int GetInt2(IntPtr ih, string name) => IupGetInt(ih, name);
+        public static int GetIntInt(IntPtr ih, string name,out int i1, out int i2) => IupGetIntInt(ih, name, out i1, out i2);
+        public static float GetFloat(IntPtr ih, string name) => IupGetFloat(ih, name);
+        public static double GetDouble(IntPtr ih, string name) => IupGetDouble(ih, name);
+        public static void GetRGB(IntPtr ih, string name, out byte r, out byte g, out byte b) => IupGetRGB(ih, name, out r, out g, out b);
+        public static Color GetRGB(IntPtr ih, string name) { IupGetRGB(ih, name, out byte r, out byte g, out byte b); return Color.FromArgb(255, r, g, b); }
+        public static void GetRGBA(IntPtr ih, string name, out byte r, out byte g, out byte b,out byte a) => IupGetRGBA(ih, name, out r, out g, out b,out a);
+        public static Color GetRGBA(IntPtr ih, string name) { IupGetRGBA(ih, name, out byte r, out byte g, out byte b,out byte a); return Color.FromArgb(a, r, g, b); }
+        public static void SetAttributeId(IntPtr ih, string name, int id, IntPtr value) => IupSetAttributeId(ih, name, id, value);
+        public static void SetAttributeId(IntPtr ih, string name, int id, string value) => IupSetStrAttributeId(ih, name, id, value);
+        public static void SetIntId(IntPtr ih, string name, int id, int value) => IupSetIntId(ih, name, id, value);
+        public static void SetFloatId(IntPtr ih, string name, int id, float value) => IupSetFloatId(ih, name, id, value);
+        public static void SetDoubleId(IntPtr ih, string name, int id, double value) => IupSetDoubleId(ih, name, id, value);
+        public static void SetRGBId(IntPtr ih, string name, int id, byte r, byte g, byte b) => IupSetRGBId(ih, name, id, r, g, b);
+        public static void SetRGBId(IntPtr ih, string name, int id, Color color) => IupSetRGBId(ih, name, id, color.R,color.G,color.B);
+        public static string GetAttributeId(IntPtr ih, string name, int id) => IupGetAttributeId(ih, name, id);
+        public static int GetIntId(IntPtr ih, string name, int id) => IupGetIntId(ih, name, id);
+        public static float GetFloatId(IntPtr ih, string name, int id) => IupGetFloatId(ih, name, id);
+        public static double GetDoubleId(IntPtr ih, string name, int id) => IupGetDoubleId(ih, name, id);
+        public static void GetRGBId(IntPtr ih, string name, int id,out byte r,out byte g,out byte b) => IupGetRGBId(ih, name, id,out r,out g,out b);
+        public static Color GetRGBId(IntPtr ih, string name, int id) { IupGetRGBId(ih, name, id, out byte r, out byte g, out byte b); return Color.FromArgb(255, r, g, b); }
+        public static void SetAttributeId2(IntPtr ih, string name, int lin, int col, string value) => IupSetStrAttributeId2(ih, name, lin, col, value);
+        public static void SetAttributeId2(IntPtr ih, string name, int lin, int col, IntPtr value) => IupSetAttributeId2(ih, name, lin, col, value);
+        public static void SetIntId2(IntPtr ih, string name, int lin, int col, int value) => IupSetIntId2(ih, name, lin, col, value);
+        public static void SetFloatId2(IntPtr ih, string name, int lin, int col, float value) => IupSetFloatId2(ih, name, lin, col, value);
+        public static void SetDoubleId2(IntPtr ih, string name, int lin, int col, double value) => IupSetDoubleId2(ih, name, lin, col, value);
+        public static void SetRGBId2(IntPtr ih, string name, int lin, int col, byte r, byte g, byte b) => IupSetRGBId2(ih, name, lin, col, r, g, b);
+        public static void SetRGBId2(IntPtr ih, string name, int lin, int col, Color color) => IupSetRGBId2(ih, name, lin, col, color.R,color.G,color.B);
+        public static string GetAttributeId2(IntPtr ih, string name, int lin, int col) => IupGetAttributeId2(ih, name, lin, col);
+        public static int GetIntId2(IntPtr ih, string name, int lin, int col) => IupGetIntId2(ih, name, lin, col);
+        public static float GetFloatId2(IntPtr ih, string name, int lin, int col) => IupGetFloatId2(ih, name, lin, col);
+        public static double GetDoubleId2(IntPtr ih, string name, int lin, int col) => IupGetDoubleId2(ih, name, lin, col);
+
+        public static void GetRGBId2(IntPtr ih, string name, int lin, int col, out byte r, out byte g, out byte b) => IupGetRGBId2(ih, name, lin, col, out r, out g, out b);
+        public static Color GetRGBId2(IntPtr ih, string name, int lin, int col) { IupGetRGBId2(ih, name, lin, col, out byte r, out byte g, out byte b); return Color.FromArgb(255, r, g, b); }
+
+        public static void SetGlobal(string name, IntPtr value) => IupSetGlobal(name, value);
+        public static void SetGlobal(string name, string value) => IupSetStrGlobal(name, value);
+        public static string GetGlobal(string name) => IupGetGlobal(name);
+        public static void SetFocus(IntPtr ih) => IupSetFocus(ih);
+        public static IntPtr GetFocus() => IupGetFocus();
+        public static IntPtr PreviousField(IntPtr ih) => IupPreviousField(ih);
+        public static IntPtr NextField(IntPtr ih) => IupNextField(ih);
+        public static IntPtr GetCallback(IntPtr ih, string name) => IupGetCallback(ih, name);
+        public static IntPtr SetCallback(IntPtr ih, string name,Delegate func) => IupSetCallback(ih, name,func);
+        public static IntPtr GetHandle(string name) => IupGetHandle(name);
+        public static IntPtr SetHandle(string name,IntPtr ih) => IupSetHandle(name,ih);
+        public static string[] GetAllNames()
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetAllNames(ref dummy, 0);
+            IntPtr[] namarr = new IntPtr[n];
+            if (n > 0)
+                IupGetAllNames(ref namarr[0], n);
+
+            string[] res = new string[n];
+            for (int i = 0; i < n; i++)
+                res[i] = Marshal.PtrToStringUTF8(namarr[i]);
+            return res;
+        }
+        public static string[] GetAllDialogs()
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetAllDialogs(ref dummy, 0);
+            IntPtr[] namarr = new IntPtr[n];
+            if (n > 0)
+                IupGetAllDialogs(ref namarr[0], n);
+
+            string[] res = new string[n];
+            for (int i = 0; i < n; i++)
+                res[i] = Marshal.PtrToStringUTF8(namarr[i]);
+            return res;
+        }
+        public static string GetName(IntPtr ih) => IupGetName(ih);
+        public static void SetAttributeHandle(IntPtr ih, string name, IntPtr ih_named) => IupSetAttributeHandle(ih, name, ih_named);
+        public static IntPtr GetAttributeHandle(IntPtr ih, string name) => IupGetAttributeHandle(ih, name);
+        public static void SetAttributeHandleId(IntPtr ih, string name, int id,IntPtr ih_named) => IupSetAttributeHandleId(ih, name, id,ih_named);
+        public static IntPtr GetAttributeHandleId(IntPtr ih, string name,int id) => IupGetAttributeHandleId (ih, name,id);
+        public static void SetAttributeHandleId2(IntPtr ih, string name, int lin,int col, IntPtr ih_named) => IupSetAttributeHandleId2(ih, name, lin,col, ih_named);
+        public static IntPtr GetAttributeHandleId2(IntPtr ih, string name, int lin,int col) => IupGetAttributeHandleId2(ih, name, lin,col);
+        public static string GetClassName(IntPtr ih) => IupGetClassName(ih);
+        public static string GetClassType(IntPtr ih) => IupGetClassType(ih);
+        public static string[] GetAllClasses()
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetAllClasses(ref dummy, 0);
+            IntPtr[] namarr = new IntPtr[n];
+            if (n > 0)
+                IupGetAllClasses(ref namarr[0], n);
+
+            string[] res = new string[n];
+            for (int i = 0; i < n; i++)
+                res[i] = Marshal.PtrToStringUTF8(namarr[i]);
+            return res;
+        }
+
+        public static string[] GetClassAttributes(string classname)
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetClassAttributes(classname,ref dummy, 0);
+            IntPtr[] namarr = new IntPtr[n];
+            if (n > 0)
+            {
+                n=IupGetClassAttributes(classname, ref namarr[0], n);
+                Array.Resize(ref namarr, n);
+            }
+            
+            string[] res = new string[n];
+            for (int i = 0; i < n; i++)
+                res[i] = Marshal.PtrToStringUTF8(namarr[i]);
+            return res;
+        }
+
+        public static string[] GetClassCallbacks(string classname)
+        {
+            IntPtr dummy = IntPtr.Zero;
+            int n = IupGetClassCallbacks(classname, ref dummy, 0);
+            IntPtr[] namarr = new IntPtr[n];
+            if (n > 0)
+            {
+                n = IupGetClassCallbacks(classname, ref namarr[0], n);
+                Array.Resize(ref namarr, n);
+            }
+
+            string[] res = new string[n];
+            for (int i = 0; i < n; i++)
+                res[i] = Marshal.PtrToStringUTF8(namarr[i]);
+            return res;
+        }
+
+        public static void SaveClassAttributes(IntPtr ih) => IupSaveClassAttributes(ih);
+        public static void CopyClassAttributes(IntPtr src_ih,IntPtr dst_ih) => IupCopyClassAttributes(src_ih,dst_ih);
+        public static void SetClassDefaultAttribute(string classname,string name,string value) => IupSetClassDefaultAttribute(classname,name,value);
+        public static bool ClassMatch(IntPtr ih, string classname) => IupClassMatch(ih, classname);
+        public static IntPtr Create(string classname) => IupCreate(classname);
         #endregion MAIN_API
 
 

@@ -14,7 +14,6 @@ namespace Tecgraf
         static void Main(string[] args)
         {
             int argc = args.Length;
-            string str = null;
 
 
             // EnableThemingInScope.EnableThemingInWindows();
@@ -26,17 +25,26 @@ namespace Tecgraf
             Iup.Open();
 
 
-            string lang=IupNative.IupGetLanguage();
+            string lang = Iup.GetLanguage();
 
             dlg = new Dialog("Min dialog",
                 new VBox(
-                    new Button("Knapp1") { Action = Knapp1Action } ,
-                    gauge=new Gauge() { Value = 0.5 },
+                    new Button("Knapp1") { Action = Knapp1Action,Expand=Expand.Yes },
+                    gauge = new Gauge() { Value = 0.5, Expand = Expand.Horizontal },
                     new Button("Knapp2")
                 )
+                { Margin = new Size(10, 10), Gap = 4 }
             );
 
+            dlg.Expand = Expand.Yes;
+
+
             dlg.Show();
+
+
+            string[] names = Iup.GetClassCallbacks("button");
+
+            
             
 
 
@@ -46,8 +54,8 @@ namespace Tecgraf
 
 
 
-            IupNative.IupMainLoop();
-            IupNative.IupClose();
+            Iup.MainLoop();
+            Iup.Close();
         }
 
         private static CBRes Knapp1Action(IntPtr sender)
@@ -81,7 +89,7 @@ namespace Tecgraf
 
         private static void Dlg_MoveCB(object sender, MoveCBEventArgs e)
         {
-            IupNative.IupSetStrAttribute((IntPtr)sender, "TITLE", e.X.ToString() + " " + e.Y.ToString());
+            Iup.SetAttribute((IntPtr)sender, "TITLE", e.X.ToString() + " " + e.Y.ToString());
         }
 
        

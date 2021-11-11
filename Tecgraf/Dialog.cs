@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 
-using static Tecgraf.IupNative;
 
 namespace Tecgraf
 {
     public class Dialog:Control
     {
-        public Dialog(string caption, Element child) : base(IupDialog(child.Handle))
+        public Dialog(string caption, Element child) : base(Iup.Dialog(child.Handle))
         {
             if (caption != null)
-                IupSetStrAttribute(Handle, "TITLE", caption);
+                Iup.SetAttribute(Handle, "TITLE", caption);
         }
 
 
         public IupError Show()
         {
-            return IupShow(Handle);
+            return Iup.Show(Handle);
         }
 
         public string Title
         {
-            get => IupGetAttribute(Handle, "TITLE");
-            set => IupSetStrAttribute(Handle, "TITLE", value);
+            get => Iup.GetAttribute(Handle, "TITLE");
+            set => Iup.SetAttribute(Handle, "TITLE", value);
         }
 
 

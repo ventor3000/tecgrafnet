@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using static Tecgraf.IupNative;
 
 namespace Tecgraf
 {
     public class Button : Control
     {
-        public Button(string caption) : base(IupButton(caption, string.Empty))
+        public Button(string caption) : base(Iup.Button(caption, string.Empty))
         {
         }
 
@@ -49,7 +48,9 @@ namespace Tecgraf
         {
             get
             {
-                IntPtr cb = IupGetCallback(Handle, "BUTTON_CB");
+                
+
+                IntPtr cb = Iup.GetCallback(Handle, "BUTTON_CB");
                 if (cb == IntPtr.Zero) return null;
                 return Marshal.GetDelegateForFunctionPointer<IcallbackButtonCB>(cb);
             }
@@ -57,7 +58,7 @@ namespace Tecgraf
             set
             {
                 //IntPtr funcptr=Marshal.GetFunctionPointerForDelegate(value);
-                IupSetCallback(Handle, "BUTTON_CB", value);
+                Iup.SetCallback(Handle, "BUTTON_CB", value);
             }
         }
 
@@ -65,14 +66,14 @@ namespace Tecgraf
 
             get
             {
-                IntPtr cb = IupGetCallback(Handle, "ACTION");
+                IntPtr cb = Iup.GetCallback(Handle, "ACTION");
                 if (cb == IntPtr.Zero) return null;
                 return Marshal.GetDelegateForFunctionPointer<Icallback>(cb);
             }
 
             set
             {
-                IupSetCallback(Handle, "ACTION", value);
+                Iup.SetCallback(Handle, "ACTION", value);
             }       
         }
 

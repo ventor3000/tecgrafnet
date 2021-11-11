@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using static Tecgraf.IupNative;
 
 namespace Tecgraf
 {
@@ -19,12 +18,12 @@ namespace Tecgraf
         {
             get
             {
-                IupGetIntInt(Handle, "MARGIN", out int i1, out int i2);
+                Iup.GetIntInt(Handle, "MARGIN", out int i1, out int i2);
                 return new Size(i1, i2);
             }
             set
             {
-                IupSetStrAttribute(Handle, "MARGIN", IupFormat.Size(value));
+                Iup.SetAttribute(Handle, "MARGIN", IupFormat.Size(value));
                 
             }
         }
@@ -33,26 +32,26 @@ namespace Tecgraf
         {
             get
             {
-                IupGetIntInt(Handle, "CMARGIN", out int i1, out int i2);
+                Iup.GetIntInt(Handle, "CMARGIN", out int i1, out int i2);
                 return new Size(i1, i2);
             }
             set
             {
-                IupSetStrAttribute(Handle, "CMARGIN", IupFormat.Size(value));
+                Iup.SetAttribute(Handle, "CMARGIN", IupFormat.Size(value));
 
             }
         }
 
         public int Gap
         {
-            get => IupGetInt(Handle, "GAP");
-            set => IupSetInt(Handle, "GAP", value);
+            get => Iup.GetInt(Handle, "GAP");
+            set => Iup.SetInt(Handle, "GAP", value);
         }
 
         public int CGap
         {
-            get => IupGetInt(Handle, "CGAP");
-            set => IupSetInt(Handle, "CGAP", value);
+            get => Iup.GetInt(Handle, "CGAP");
+            set => Iup.SetInt(Handle, "CGAP", value);
         }
 
     }

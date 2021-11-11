@@ -11,25 +11,6 @@ namespace Tecgraf
 
         const string module= "iup";
 
-        #region CALLBACKS
-        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes Icallback(IntPtr sender);
-
-        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes IcallbackIIIIS(IntPtr sender, int button, int pressed, int x, int y, string status);
-
-        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes IcallbackII(IntPtr sender, int x, int y);
-
-        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes IcallbackButtonCB(IntPtr sender, MouseButton button, [MarshalAs(UnmanagedType.Bool)]bool pressed, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
-        //int function(Ihandle* ih, int x, int y, char* status);[in C]
-        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate CBRes IcallbackMotionCB(IntPtr sender, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
-
-
-        #endregion
-
 
         #region MAIN_API
 
@@ -295,7 +276,7 @@ namespace Tecgraf
         public static extern void IupGetRGBA(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, out byte  r, out byte  g, out byte  b, out byte a);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeId", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+        public static extern void IupSetAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id,IntPtr value);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrAttributeId", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupSetStrAttributeId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
@@ -333,13 +314,15 @@ namespace Tecgraf
         public static extern void IupGetRGBId(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int id, out byte r, out byte g, out byte b);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetAttributeId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
+        public static extern void IupSetAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, IntPtr value);
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrAttributeId2", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupSetStrAttributeId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string value);
 
+        /*
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetStrfId2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void IupSetStrfId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string format);
+        public static extern void IupSetStrfId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, [MarshalAs(UnmanagedType.LPUTF8Str)] string format,__arglist);
+        */
 
         [SuppressUnmanagedCodeSecurity, DllImport(module, EntryPoint = "IupSetIntId2", CallingConvention = CallingConvention.Cdecl)]
         public static extern void IupSetIntId2(IntPtr ih, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int lin, int col, int value);

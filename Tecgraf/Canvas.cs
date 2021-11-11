@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Tecgraf.IupNative;
 
 namespace Tecgraf
 {
@@ -21,7 +20,7 @@ namespace Tecgraf
         {
             get
             {
-                IntPtr cb = IupGetCallback(Handle, "MOTION_CB");
+                IntPtr cb = Iup.GetCallback(Handle, "MOTION_CB");
                 if (cb == IntPtr.Zero) return null;
                 return Marshal.GetDelegateForFunctionPointer<IcallbackMotionCB>(cb);
             }
@@ -29,7 +28,7 @@ namespace Tecgraf
             set
             {
                 //IntPtr funcptr=Marshal.GetFunctionPointerForDelegate(value);
-                IupSetCallback(Handle, "MOTION_CB", value);
+                Iup.SetCallback(Handle, "MOTION_CB", value);
             }
         }
 
