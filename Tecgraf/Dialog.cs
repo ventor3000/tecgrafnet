@@ -5,19 +5,16 @@ using System.Text;
 
 namespace Tecgraf
 {
-    public class Dialog:Control
+    public class Dialog:Container
     {
-        public Dialog(string caption, Element child) : base(Iup.Dialog(child.Handle))
+        public Dialog(string caption, Element child) : base(Iup.Dialog(SafeHandle(child)))
         {
             if (caption != null)
                 Iup.SetAttribute(Handle, "TITLE", caption);
         }
 
 
-        public IupError Show()
-        {
-            return Iup.Show(Handle);
-        }
+       
 
         public string Title
         {
@@ -26,7 +23,16 @@ namespace Tecgraf
         }
 
 
-        
+
+        public IupError Popup(int x, int y) => Iup.Popup(Handle, x, y);
+        public IupError Popup(DialogPos xpos, DialogPos ypos) => Iup.Popup(Handle, (int)xpos, (int)ypos);
+        public IupError Popup(int xpos, DialogPos ypos) => Iup.Popup(Handle, xpos, (int)ypos);
+        public IupError Popup(DialogPos xpos, int ypos) => Iup.Popup(Handle, (int) xpos, ypos);
+        public IupError ShowXY(int x, int y) => Iup.ShowXY(Handle, x, y);
+        public IupError ShowXY(DialogPos xpos, DialogPos ypos) => Iup.ShowXY(Handle, (int)xpos, (int)ypos);
+        public IupError ShowXY(int xpos, DialogPos ypos) => Iup.ShowXY(Handle, xpos, (int)ypos);
+        public IupError ShowXY(DialogPos xpos, int ypos) => Iup.ShowXY(Handle, (int)xpos, ypos);
+
         /*
 
         #region MOVE_CB

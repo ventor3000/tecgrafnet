@@ -36,32 +36,32 @@ namespace Tecgraf
         }
 
 
-        public static string Cursor(Cursor cursorname)
+        public static string Cursor(MouseCursor cursorname)
         {
-            return EnumToAtt<Tecgraf.Cursor>(cursorname,
-                "NONE", Tecgraf.Cursor.None,
-                "NULL", Tecgraf.Cursor.None,
-                "ARROW", Tecgraf.Cursor.Arrow,
-                "BUSY", Tecgraf.Cursor.Busy,
-                "CROSS", Tecgraf.Cursor.Cross,
-                "HAND", Tecgraf.Cursor.Hand,
-                "HELP", Tecgraf.Cursor.Help,
-                "MOVE", Tecgraf.Cursor.Move,
-                "PEN", Tecgraf.Cursor.Pen,
-                "RESIZE_N", Tecgraf.Cursor.ResizeN,
-                "RESIZE_S", Tecgraf.Cursor.ResizeS,
-                "RESIZE_NS", Tecgraf.Cursor.ResizeNS,
-                "RESIZE_W", Tecgraf.Cursor.ResizeW,
-                "RESIZE_E", Tecgraf.Cursor.ResizeE,
-                "RESIZE_WE", Tecgraf.Cursor.ResizeWE,
-                "RESIZE_NE", Tecgraf.Cursor.ResizeNE,
-                "RESIZE_SW", Tecgraf.Cursor.ResizeSW,
-                "RESIZE_NW", Tecgraf.Cursor.ResizeNW,
-                "RESIZE_SE", Tecgraf.Cursor.ResizeSE,
-                "TEXT", Tecgraf.Cursor.Text,
-                "APPSTARTING", Tecgraf.Cursor.AppStarting,
-                "NO", Tecgraf.Cursor.No,
-                "UPARROW", Tecgraf.Cursor.UpArrow);
+            return EnumToAtt<Tecgraf.MouseCursor>(cursorname,
+                "NONE", Tecgraf.MouseCursor.None,
+                "NULL", Tecgraf.MouseCursor.None,
+                "ARROW", Tecgraf.MouseCursor.Arrow,
+                "BUSY", Tecgraf.MouseCursor.Busy,
+                "CROSS", Tecgraf.MouseCursor.Cross,
+                "HAND", Tecgraf.MouseCursor.Hand,
+                "HELP", Tecgraf.MouseCursor.Help,
+                "MOVE", Tecgraf.MouseCursor.Move,
+                "PEN", Tecgraf.MouseCursor.Pen,
+                "RESIZE_N", Tecgraf.MouseCursor.ResizeN,
+                "RESIZE_S", Tecgraf.MouseCursor.ResizeS,
+                "RESIZE_NS", Tecgraf.MouseCursor.ResizeNS,
+                "RESIZE_W", Tecgraf.MouseCursor.ResizeW,
+                "RESIZE_E", Tecgraf.MouseCursor.ResizeE,
+                "RESIZE_WE", Tecgraf.MouseCursor.ResizeWE,
+                "RESIZE_NE", Tecgraf.MouseCursor.ResizeNE,
+                "RESIZE_SW", Tecgraf.MouseCursor.ResizeSW,
+                "RESIZE_NW", Tecgraf.MouseCursor.ResizeNW,
+                "RESIZE_SE", Tecgraf.MouseCursor.ResizeSE,
+                "TEXT", Tecgraf.MouseCursor.Text,
+                "APPSTARTING", Tecgraf.MouseCursor.AppStarting,
+                "NO", Tecgraf.MouseCursor.No,
+                "UPARROW", Tecgraf.MouseCursor.UpArrow);
 
         }
 

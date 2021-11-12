@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 
@@ -14,7 +15,9 @@ namespace Tecgraf
         }
 
 
-       public Expand Expand
+        #region ATTRIBUTES
+
+        public Expand Expand
         {
             get
             {
@@ -42,8 +45,39 @@ namespace Tecgraf
             }
         }
 
+        public virtual Color BgColor
+        {
+            set
+            {
+                Iup.SetAttribute(Handle,"BGCOLOR", IupFormat.Color(value));
+            }
+            get
+            {
+                return IupParse.Color(Iup.GetAttribute( Handle,Iup.GetAttribute(Handle,"BGCOLOR")));
+            }
+        }
 
-      
+        public virtual Color FgColor
+        {
+            set
+            {
+                Iup.SetAttribute(Handle, "FGCOLOR", IupFormat.Color(value));
+            }
+            get
+            {
+                return IupParse.Color(Iup.GetAttribute(Handle, Iup.GetAttribute(Handle, "FGCOLOR")));
+            }
+        }
+
+        #endregion
+
+
+        #region FUNCTIONS
+        public virtual void Hide() => Iup.Hide(Handle);
+        public virtual IupError Show() => Iup.Show(Handle);
+        #endregion
+
+
     }
 
     

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Tecgraf;
 
-namespace Tecgraf
+namespace IUPTest
 {
     unsafe class Program
     {
@@ -19,9 +21,9 @@ namespace Tecgraf
             // EnableThemingInScope.EnableThemingInWindows();
 
 
-            WindowsSpecific.EnableThemingInWindows();
-
             
+
+
             Iup.Open();
 
 
@@ -29,7 +31,7 @@ namespace Tecgraf
 
             dlg = new Dialog("Min dialog",
                 new VBox(
-                    new Button("Knapp1") { Action = Knapp1Action,Expand=Expand.Yes },
+                    new Button("Knapp1") { CBAction = Knapp1Action,Expand=Expand.Yes },
                     gauge = new Gauge() { Value = 0.5, Expand = Expand.Horizontal },
                     new Button("Knapp2")
                 )
@@ -41,6 +43,7 @@ namespace Tecgraf
 
             dlg.Show();
 
+           
 
             string[] names = Iup.GetClassCallbacks("button");
 
@@ -55,12 +58,23 @@ namespace Tecgraf
 
 
             Iup.MainLoop();
+
+
+            
+
             Iup.Close();
         }
 
         private static CBRes Knapp1Action(IntPtr sender)
         {
-            Iup.VersionShow();
+
+            
+
+            using (TestDialog dlg = new TestDialog())
+            {
+                dlg.Popup(DialogPos.CenterParent, DialogPos.CenterParent);
+            }
+            
             return CBRes.Default;
         }
           

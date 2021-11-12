@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Platforms>AnyCPU;x86;x64</Platforms>
+    <ApplicationIcon />
+    <Win32Resource />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,5 +40,6 @@
     <OutputPath>..\bin</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
+
 
 </Project>

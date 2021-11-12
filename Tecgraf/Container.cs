@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tecgraf
 {
-    public class Container:Element
+    public class Container:Control
     {
         internal Container(IntPtr handle):base(handle)
         {

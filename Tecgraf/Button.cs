@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -14,37 +15,143 @@ namespace Tecgraf
 
 
 
-        #region BUTTON_CB
-        /*
-        EventHandler<ButtonCBEventArgs> buttonCBHandler;
-
-        public event EventHandler<ButtonCBEventArgs> ButtonCB
+        public virtual Alignment Alignment
         {
-            add
+            set
             {
-                buttonCBHandler += value;
-                IupSetCallback(Handle, "BUTTON_CB", OnButtonCB);
-
+                string v = IupFormat.EnumToAtt<Alignment>(value,
+                    "ACENTER:ACENTER", Alignment.Center,
+                    "ACENTER:ATOP", Alignment.Top,
+                    "ALEFT:ACENTER", Alignment.Left,
+                    "ARIGHT:ACENTER", Alignment.Right,
+                    "ACENTER:ABOTTOM", Alignment.Bottom,
+                    "ALEFT:ATOP", Alignment.TopLeft,
+                    "ARIGHT:ATOP", Alignment.TopRight,
+                    "ALEFT:ABOTTOM", Alignment.BottomLeft,
+                    "ARIGHT:ABOTTOM", Alignment.BottomRight);
+                Iup.SetAttribute(Handle,"ALIGNMENT", v);
             }
-            remove
-            {
-                buttonCBHandler -= value;
-                if (buttonCBHandler == null) IupSetCallback(Handle, "BUTTON_CB", (Icallback)null);
+        } //TODO: get
 
+
+        public virtual bool CanFocus
+        {
+            get
+            {
+                return  GetBool("CANFOCUS");
+            }
+            set
+            {
+                SetBool("CANFOCUS", value, "YES", "NO");
             }
         }
 
-        private CBRes OnButtonCB(IntPtr sender, int btn, int pressed, int x, int y, string status)
+        public virtual bool Flat
         {
+            get
+            {
+                return GetBool("FLAT");
+            }
+            set
+            {
+                SetBool("FLAT", value, "YES", "NO");
+            }
+        }
 
-            buttonCBHandler?.Invoke(sender, new ButtonCBEventArgs(pressed != 0, x, y, EventUtils.StringToModifierStatus(status)));
-            return 0;
-        }*/
 
-        #endregion BUTTON_CB
+        /* TODO: implement glyphs
+        public virtual Glyph Glyph
+        {
+            get
+            {
+                return _glyph;
+            }
+            set
+            {
+                _glyph = value;
+                Handle.SetAttributeHandle("IMAGE", value == null ? null : value.Handle);
+            }
+        }
 
 
-        public IcallbackButtonCB ButtonCB
+
+
+
+        public virtual Glyph GlyphInactive
+        {
+            get
+            {
+                return _glyphInactive;
+            }
+            set
+            {
+                _glyphInactive = value;
+                Handle.SetAttributeHandle("IMINACTIVE", value == null ? null : value.Handle);
+            }
+        }
+
+
+
+
+        public virtual Glyph GlyphPress
+        {
+            get
+            {
+                return _glyphPress;
+            }
+            set
+            {
+                _glyphPress = value;
+                Handle.SetAttributeHandle("IMPRESS", value == null ? null : value.Handle);
+            }
+        }
+        */
+
+        public virtual ImagePosition ImagePosition
+        {
+            get
+            {
+                return IupFormat.AttToEnum<ImagePosition>(Iup.GetAttribute(Handle,"IMAGEPOSITION"), "LEFT", ImagePosition.Left, "RIGHT", ImagePosition.Right, "TOP", ImagePosition.Top, "BOTTOM", ImagePosition.Bottom);
+            }
+            set
+            {
+                Iup.SetAttribute(Handle,"IMAGEPOSITION", IupFormat.EnumToAtt<ImagePosition>(value, "LEFT", ImagePosition.Left, "RIGHT", ImagePosition.Right, "TOP", ImagePosition.Top, "BOTTOM", ImagePosition.Bottom));
+            }
+        }
+
+        public virtual Size Padding
+        {
+            get
+            {
+                return base.GetSize("PADDING");
+            }
+            set
+            {
+                Iup.SetAttribute(Handle,"PADDING", IupFormat.Size(value));
+            }
+        }
+
+        /// <summary>
+        /// (creation only): defines the spacing between the image associated and the button's text. Default: 2.
+        /// </summary>
+        public virtual int Spacing
+        {
+            get
+            {
+                return Iup.GetInt(Handle,"SPACING");
+            }
+            set
+            {
+                Iup.SetInt(Handle,"SPACING", value);
+            }
+        }
+
+
+
+
+        #region CALLBACKS
+
+        public IcallbackButtonCB CBButton
         {
             get
             {
@@ -62,7 +169,7 @@ namespace Tecgraf
             }
         }
 
-        public Icallback Action {
+        public Icallback CBAction {
 
             get
             {
@@ -77,34 +184,9 @@ namespace Tecgraf
             }       
         }
 
-    /*
 
-        #region ACTION
-        EventHandler<EventArgs> actionHandler;
+        #endregion
 
-        public event EventHandler<EventArgs> Action
-        {
-            add
-            {
-                actionHandler += value;
-                IupSetCallback(Handle, "ACTION", OnAction);
-
-            }
-            remove
-            {
-                actionHandler -= value;
-                if (actionHandler == null) IupSetCallback(Handle, "ACTION", (Icallback)null);
-
-            }
-        }
-
-        private int OnAction(IntPtr sender)
-        {
-
-            actionHandler?.Invoke(sender, EventArgs.Empty);
-            return 0;
-        }
-        #endregion ACTION*/
 
     }
 }

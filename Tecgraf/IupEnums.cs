@@ -60,7 +60,7 @@ namespace Tecgraf
         Vertical,
     }
 
-    public enum Cursor
+    public enum MouseCursor
     {
         None,
         Arrow,
@@ -115,7 +115,42 @@ namespace Tecgraf
         Binary=0,
         Text=1
     }
-     
+
+    public enum DialogPos {
+        Center = 0xFFFF,
+        Left = 0xFFFE,
+        Right = 0xFFFD,
+        MousePos = 0xFFFC,
+        Current = 0xFFFB,
+        CenterParent = 0xFFFA,
+        LeftParent = 0xFFF9,
+        RightParent = 0xFFF8,
+        Top = Left,
+        Bottom = Right,
+        TopParent = LeftParent,
+        BottomParent = RightParent
+    }
+
+    public enum Alignment
+    {
+        Center = 0,
+        Top = 1,
+        Left = 2,
+        Right = 4,
+        Bottom = 8,
+        TopLeft = Top | Left,
+        TopRight = Top | Right,
+        BottomLeft = Bottom | Left,
+        BottomRight = Bottom | Right
+    }
+
+    public enum ImagePosition
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
 
 
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Tecgraf
 {
-    public class Element
+    public class Element:IDisposable
     {
         public IntPtr Handle;
 
@@ -25,6 +26,7 @@ namespace Tecgraf
             
             if(elementMap.ContainsKey(sender)) 
                 elementMap.Remove(sender);
+
             return CBRes.Default;
         }
 
@@ -48,7 +50,13 @@ namespace Tecgraf
             }
         }
 
-        public Icallback CBLDesroy
+        public void Dispose()
+        {
+            // We dont care for a full destructor-type dispose, just destroy self if Dispose is called...
+            Destroy();
+        }
+
+        virtual protected Icallback CBLDesroy
         {
 
             get
@@ -61,6 +69,41 @@ namespace Tecgraf
             {
                 Iup.SetCallback(Handle, "LDESTROY_CB", value);
             }
+        }
+
+        protected static IntPtr SafeHandle(Element e)
+        {
+            if (e == null) return IntPtr.Zero;
+            return e.Handle;
+        }
+
+
+        protected bool GetBool(string attname)
+        {
+            string s = Iup.GetAttribute(Handle,attname);
+            if (s == "TRUE" || s == "YES" || s == "ON")
+                return true;
+            return false;
+        }
+
+        protected Point GetPoint(string attname)
+        {
+            int x, y;
+            Iup.GetIntInt(Handle,attname, out x, out y);
+            return new Point(x, y);
+        }
+
+        protected Size GetSize(string attname)
+        {
+            int x, y;
+            Iup.GetIntInt(Handle,attname, out x, out y);
+            return new Size(x, y);
+        }
+
+
+        protected void SetBool(string attname, bool value, string trueval, string falseval)
+        {
+            Iup.SetAttribute(Handle,attname, value ? trueval : falseval);
         }
 
 

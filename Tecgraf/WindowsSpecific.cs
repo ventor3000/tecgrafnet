@@ -8,7 +8,7 @@ using System.Text;
 namespace Tecgraf
 {
 
-    /*
+    
     public static class WindowsVisualStyles
     {
 
@@ -33,6 +33,7 @@ namespace Tecgraf
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ActivateActCtx(IntPtr hActCtx, out IntPtr lpCookie);
 
+        
         public static void Enable()
         {
             ACTCTX ctx=new ACTCTX();
@@ -57,7 +58,7 @@ namespace Tecgraf
 
 
          }
-    }*/
+    }
 
     [SuppressUnmanagedCodeSecurity]
     public static class WindowsSpecific
@@ -86,7 +87,7 @@ namespace Tecgraf
 
 
 
-
+        /*
         public static bool EnableThemingInWindows()
         {
 
@@ -113,11 +114,12 @@ namespace Tecgraf
             err=Marshal.GetLastWin32Error();
 
             return suc;
-        }
+        }*/
 
-        /*
+        
         public static bool EnableThemingFromIUPDll()
         {
+
 
             IntPtr hActCtx;
             ACTCTX actCtx=new ACTCTX();
@@ -125,14 +127,15 @@ namespace Tecgraf
             const int ACTCTX_FLAG_HMODULE_VALID = 128;
             const int ACTCTX_FLAG_RESOURCE_NAME_VALID = 8;
 
+            IntPtr hInst=Iup.GetGlobalPtr("DLL_HINSTANCE");
 
-            IntPtr hInst=IUPNative.IupGetGlobal("DLL_HINSTANCE");
+            
 
             actCtx.cbSize = Marshal.SizeOf(actCtx);
             actCtx.dwFlags = ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_RESOURCE_NAME_VALID;
             actCtx.lpApplicationName = null;
             actCtx.lpAssemblyDirectory = null;
-            actCtx.lpResourceName = (IntPtr)9;
+            actCtx.lpResourceName = (IntPtr)1;
             actCtx.lpSource = null;
             actCtx.wLangId = 0;
             actCtx.wProcessorArchitecture = 0;
@@ -142,17 +145,19 @@ namespace Tecgraf
             int err = Marshal.GetLastWin32Error();
 
 
-            hActCtx = CreateActCtxA(ref actCtx);
+            hActCtx = CreateActCtx(ref actCtx);
 
+
+            
 
             err=Marshal.GetLastWin32Error();
 
             //if (hActCtx != INVALID_HANDLE_VALUE)
             {
                 IntPtr cookie = IntPtr.Zero;
-                bool res=ActivateActCtx(hActCtx, cookie);
+                bool res=ActivateActCtx(hActCtx,ref cookie);
 
-                
+                err = Marshal.GetLastWin32Error();
 
                 //DeactivateActCtx(0, cookie);
                 //ReleaseActCtx(hActCtx);
@@ -160,7 +165,7 @@ namespace Tecgraf
 
 
             return true;
-        }*/
+        }
 
 
         public static void AddNativeDllPath()

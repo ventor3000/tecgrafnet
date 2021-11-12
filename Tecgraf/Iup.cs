@@ -41,6 +41,7 @@ namespace Tecgraf
         public static IupError Open()
         {
             WindowsSpecific.AddNativeDllPath();
+            WindowsSpecific.EnableThemingFromIUPDll();
 
             int argc = 0;
             string argv = string.Empty;
@@ -102,7 +103,7 @@ namespace Tecgraf
         public static IupError Reparent(IntPtr ih, IntPtr new_parent, IntPtr ref_child) => IupReparent(ih, new_parent, ref_child);
         public static IupError Popup(IntPtr ih, int x, int y) => IupPopup(ih, x, y);
         public static IupError Show(IntPtr ih) => IupShow(ih);
-        public static IupError ShowXY(IntPtr ih) => IupShow(ih);
+        public static IupError ShowXY(IntPtr ih,int x,int y) => IupShowXY(ih,x,y);
         public static IupError Hide(IntPtr ih) => IupHide(ih);
         public static IupError Map(IntPtr ih) => IupMap(ih);
         public static void Unmap(IntPtr ih) => IupUnmap(ih);
@@ -178,6 +179,8 @@ namespace Tecgraf
         public static void SetGlobal(string name, IntPtr value) => IupSetGlobal(name, value);
         public static void SetGlobal(string name, string value) => IupSetStrGlobal(name, value);
         public static string GetGlobal(string name) => IupGetGlobal(name);
+        public static IntPtr GetGlobalPtr(string name) => IupGetGlobalPtr(name);
+
         public static void SetFocus(IntPtr ih) => IupSetFocus(ih);
         public static IntPtr GetFocus() => IupGetFocus();
         public static IntPtr PreviousField(IntPtr ih) => IupPreviousField(ih);
@@ -342,9 +345,6 @@ namespace Tecgraf
 
         #region PREDEFINED_DIALOGS
 
-
-
-
         public static FileStatus GetFile(ref string fileName)
         {
             StringBuilder sb = new StringBuilder(4096);
@@ -409,7 +409,6 @@ namespace Tecgraf
         {
             return IupAlarm(title, msg, btn1, btn2, btn3);
         }
-
 
         public static bool ListDialog(string title, int max_col, int max_lin, params ListDialogEntry[] list)
         {
@@ -489,8 +488,6 @@ namespace Tecgraf
             }
             return false;
         }
-
-
     }
 
     public class ListDialogEntry
