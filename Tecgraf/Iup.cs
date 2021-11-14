@@ -25,6 +25,9 @@ namespace Tecgraf
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public unsafe delegate CBRes IcallbackMotionCB(IntPtr sender, int x, int y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ModifierStatusMarshaller))] ModifierStatus status);
 
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public unsafe delegate CBRes IcallbackFileCB(IntPtr* sender, [MarshalAs(UnmanagedType.LPUTF8Str)] string file_name, [MarshalAs(UnmanagedType.LPUTF8Str)] string status);
+
     #endregion
 
     public static class Iup
@@ -344,6 +347,13 @@ namespace Tecgraf
         #endregion ELEMENT_CREATION
 
         #region PREDEFINED_DIALOGS
+        public static IntPtr FileDlg() => IupNative.IupFileDlg();
+        public static IntPtr MessageDlg() => IupNative.IupMessageDlg();
+        public static IntPtr ColorDlg() => IupNative.IupColorDlg();
+        public static IntPtr FontDlg() => IupNative.IupFontDlg();
+        public static IntPtr ProgressDlg() => IupNative.IupProgressDlg();
+
+
 
         public static FileStatus GetFile(ref string fileName)
         {

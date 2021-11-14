@@ -20,7 +20,7 @@ namespace IUPTest
 
             // EnableThemingInScope.EnableThemingInWindows();
 
-
+            WindowsVisualStyles.Enable();
             
 
 
@@ -68,16 +68,22 @@ namespace IUPTest
         private static CBRes Knapp1Action(IntPtr sender)
         {
 
-            
+            /*using*/
+            FileDialog dlg = new FileDialog() { DialogType = FileDialogType.Open, CBFile = OnFile };
 
-            using (TestDialog dlg = new TestDialog())
-            {
-                dlg.Popup(DialogPos.CenterParent, DialogPos.CenterParent);
-            }
+                dlg.Popup(100,100);
+
+
+           
             
             return CBRes.Default;
         }
-          
+
+        private static CBRes OnFile(IntPtr* sender, string file_name, string status)
+        {
+            Iup.Message(file_name, status);
+            return CBRes.Default;
+        }
 
         private static CBRes ViewportMotion(IntPtr sender, int x, int y, ModifierStatus status)
         {

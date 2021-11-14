@@ -16,8 +16,6 @@ namespace IUPTest
                     new Button("Stäng") { CBAction=delegate { Hide();return CBRes.Default; } }
                 )
             );
-
-
         }
     }
 }
